@@ -7,8 +7,7 @@ module AoC2023
       def self.day02
         cube_games = File.open('input/day02.txt') { |file| CubeConundrum.new file }
         puts "Day  2, Part One: #{ cube_games.possible_games_ids_sum } is the sum of the IDs of those games."
-        # puts "Day  2, Part Two: #{ cube_games.sum_with_words } is the sum of all of the " \
-        #      'calibration values, including words.'
+        puts "Day  2, Part Two: #{ cube_games.minimal_powers } is the power sum of the least possible cube sets."
         puts
       end
 
