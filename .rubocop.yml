@@ -1,0 +1,91 @@
+require:
+  - rubocop-rake
+  - rubocop-rspec
+
+AllCops:
+  NewCops: enable
+  TargetRubyVersion: 3.2.2
+  ExtraDetails: true
+  Exclude:
+    - bin/bundle
+    - vendor/**/*
+
+Layout/CaseIndentation:
+  IndentOneStep: true
+
+Layout/HashAlignment:
+  EnforcedColonStyle: table
+  EnforcedHashRocketStyle: table
+
+Layout/LineLength:
+  Max: 128
+
+Layout/MultilineMethodCallIndentation:
+  EnforcedStyle: aligned
+
+Layout/SpaceAroundOperators:
+  Enabled: false
+
+Layout/SpaceInsideStringInterpolation:
+  EnforcedStyle: space
+
+Metrics/BlockLength:
+  Exclude:
+    - spec/**/*
+
+Naming/BlockForwarding:
+  EnforcedStyle: explicit
+
+Naming/MethodParameterName:
+  AllowedNames:
+    - i
+    - w
+    - x
+    - y
+    - z
+    - md
+    - op
+
+Naming/VariableNumber:
+  AllowedPatterns:
+    - '_9001\z'
+
+RSpec/FilePath:
+  CustomTransform:
+    AoC2023: aoc2023
+
+Style/BlockDelimiters:
+  EnforcedStyle: braces_for_chaining
+
+Style/FormatString:
+  EnforcedStyle: percent
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Style/MixinUsage:
+  Exclude:
+    - spec/**/*
+
+Style/ParallelAssignment:
+  Enabled: false
+
+Style/PerlBackrefs:
+  Enabled: false
+
+Style/SpecialGlobalVars:
+  EnforcedStyle: use_perl_names
+
+Style/StringLiterals:
+  Enabled: true
+  EnforcedStyle: single_quotes
+
+Style/StringLiteralsInInterpolation:
+  Enabled: true
+  EnforcedStyle: single_quotes

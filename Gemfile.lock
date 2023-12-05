@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    AoC2022 (0.1.0)
+    AoC2023 (0.1.0)
       matrix (~> 0.4)
 
 GEM
@@ -72,7 +72,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  AoC2022!
+  AoC2023!
   rake (~> 13.0)
   reek (~> 6.0)
   rspec (~> 3.0)
