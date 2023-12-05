@@ -22,7 +22,7 @@ module AoC2023
         'blue'  => 14
       }.freeze
 
-      def parse_line(line)
+      def self.parse_line(line)
         /^Game (?<game_id>\d+): (?<rest>.*)$/ =~ line
         plays = rest.split(';')
         plays.each do |play|
@@ -40,14 +40,13 @@ module AoC2023
       end
 
       def possible_games_ids_sum
-        @games.map { |game| parse_line(game) }.sum
+        @games.map { |game| CubeConundrum.parse_line(game) }.sum
       end
 
-      def parse_for_power(line)
+      def self.parse_for_power(line)
         cube_counts = { 'red' => 0, 'green' => 0, 'blue' => 0 }
-        /^Game (?<game_id>\d+): (?<rest>.*)$/ =~ line
-        plays = rest.split(';')
-        plays.each do |play|
+        /^Game \d+: (?<rest>.*)$/ =~ line
+        rest.split(';').each do |play|
           cubes = play.split(',')
           cubes.each do |cube|
             # pp cube
@@ -63,7 +62,7 @@ module AoC2023
       end
 
       def minimal_powers
-        @games.map { |game| parse_for_power(game) }.sum
+        @games.map { |game| CubeConundrum.parse_for_power(game) }.sum
       end
     end
   end
