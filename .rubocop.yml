@@ -7,7 +7,7 @@ AllCops:
   TargetRubyVersion: 3.2.2
   ExtraDetails: true
   Exclude:
-    - bin/bundle
+    - bin/*
     - vendor/**/*
 
 Layout/CaseIndentation:
@@ -51,6 +51,9 @@ Naming/VariableNumber:
     - '_9001\z'
 
 RSpec/FilePath:
+  Enabled: false
+
+RSpec/SpecFilePathFormat:
   CustomTransform:
     AoC2023: aoc2023
 
