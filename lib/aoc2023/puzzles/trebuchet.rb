@@ -13,7 +13,7 @@ module AoC2023
       end
 
       def initialize(file)
-        @lines = file.readlines(chomp: true)
+        @games = file.readlines(chomp: true)
       end
 
       VALS = {
@@ -39,7 +39,7 @@ module AoC2023
       }.freeze
 
       def sum_numbers
-        values = @lines.map do |line|
+        values = @games.map do |line|
           /^.*?(?<tens>\d)/ =~ line
           /.*(?<ones>\d).*?$/ =~ line
           (VALS[tens] * 10) + VALS[ones]
@@ -48,7 +48,7 @@ module AoC2023
       end
 
       def sum_with_words
-        values = @lines.map do |line|
+        values = @games.map do |line|
           /^.*?(?<tens>\d|one|two|three|four|five|six|seven|eight|nine)/ =~ line
           /.*(?<ones>\d|one|two|three|four|five|six|seven|eight|nine).*?$/ =~ line
           (VALS[tens] * 10) + VALS[ones]
