@@ -2,7 +2,7 @@
 
 Dir["#{ File.dirname(__FILE__) }/puzzles/*.rb"].each { |file| require file }
 
-module AoC2022
+module AoC2023
   # The Runner class provides file loading services around the solution for each day.
   class Runner
     def self.start
@@ -11,9 +11,9 @@ module AoC2022
     end
 
     def self.find_day_methods
-      AoC2022::Puzzles
+      AoC2023::Puzzles
         .constants
-        .map { |constant| AoC2022::Puzzles.const_get(constant) }
+        .map { |constant| AoC2023::Puzzles.const_get(constant) }
         .select { |constant| constant.is_a? Class }
         .reduce([], &method(:pick_day_methods))
         .sort_by { |_, method_name| method_name }

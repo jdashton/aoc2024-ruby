@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe AoC2022::Puzzles::BeaconExclusionZone do
+RSpec.describe AoC2023::Puzzles::BeaconExclusionZone do
   context 'with provided test data' do
     subject(:beacon_exclusion_zone) { described_class.new StringIO.new(<<~DATA) }
       Sensor at x=2, y=18: closest beacon is at x=-2, y=15

@@ -13,5 +13,5 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.include AoC2022
+  config.include AoC2023
 end

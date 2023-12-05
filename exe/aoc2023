@@ -3,4 +3,4 @@
 
 require 'aoc2023'
 
-AoC2022.start
+AoC2023.start

@@ -24,4 +24,4 @@ end
 require "rubygems"
 require "bundler/setup"
 
-load Gem.bin_path("AoC2022", "aoc2023")
+load Gem.bin_path("AoC2023", "aoc2023")

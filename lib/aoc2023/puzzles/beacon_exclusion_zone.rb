@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module AoC2022
+module AoC2023
   module Puzzles
     # For Day 15, we're looking for the missing beacon.
     class BeaconExclusionZone
