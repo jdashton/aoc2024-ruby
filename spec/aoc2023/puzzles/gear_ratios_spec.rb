@@ -19,9 +19,9 @@ RSpec.describe AoC2023::Puzzles::GearRatios do
       expect(schematic.part_numbers_sum).to eq 4_361
     end
 
-    # it 'finds 2286 as the sum of powers of minimal game cube sets' do
-    #   expect(schematic.minimal_powers).to eq 2286
-    # end
+    it 'finds 467,835 as the sum of all of the gear ratios in your engine schematic' do
+      expect(schematic.gear_ratios_sum).to eq 467_835
+    end
   end
 
   context 'with actual input data' do
@@ -35,8 +35,8 @@ RSpec.describe AoC2023::Puzzles::GearRatios do
       expect(schematic.part_numbers_sum).to eq 540_212
     end
 
-    # it 'finds 67,953 as the power sum of the least possible cube sets' do
-    #   expect(schematic.minimal_powers).to eq 67_953
-    # end
+    it 'finds 87,605,697 as the sum of all of the gear ratios in your engine schematic' do
+      expect(schematic.gear_ratios_sum).to eq 87_605_697
+    end
   end
 end
