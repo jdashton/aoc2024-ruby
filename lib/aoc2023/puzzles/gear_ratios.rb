@@ -36,9 +36,10 @@ module AoC2023
       end
 
       def detect_tag((i, j))
-        return false unless i >= 0 && i < @lines.count && DIGITS.match?(@lines[i][j])
+        this_line = @lines[i]
+        return false unless i >= 0 && i < @lines.count && DIGITS.match?(this_line[j])
 
-        j -= 1 while j.positive? && DIGITS.match?(@lines[i][j - 1])
+        j -= 1 while j.positive? && DIGITS.match?(this_line[j - 1])
         @tag_coords << [i, j]
       end
 
