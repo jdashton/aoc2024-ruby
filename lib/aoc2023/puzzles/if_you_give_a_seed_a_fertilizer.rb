@@ -20,9 +20,9 @@ module AoC2023
       end
 
       def construct_maps
-        @lines[1..].each do |line|
-          (@layers << []) && next if line.empty?
-          next if line.chars.last == ':'
+        @lines[1..].reject(&:empty?)
+                   .each do |line|
+          (@layers << []) && next if line.chars.last == ':'
 
           dest, src, len = line.split.map(&:to_i)
           @layers.last << [(src..src + len - 1), (dest..dest + len - 1)]
