@@ -19,22 +19,6 @@ module AoC2023
         construct_maps
       end
 
-      # This method takes the layers of maps in the @layers instance variable and flattens them into a single
-      # map that maps from all possible seed values to all possible location values.
-      def flatten_layers
-        # The following code suggested by Copilot, but probably does not produce a useful result.
-        @layers.reduce({}) do |flattened, layer|
-          layer.each do |src, dest|
-            src.each do |src_num|
-              dest.each do |dest_num|
-                flattened[src_num] = dest_num
-              end
-            end
-          end
-          flattened
-        end
-      end
-
       def construct_maps
         @lines[1..].reject(&:empty?)
                    .each do |line|
