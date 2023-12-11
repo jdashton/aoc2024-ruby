@@ -21,7 +21,7 @@ module AoC2023
 
       def construct_maps
         @lines[1..].reject(&:empty?)
-                   .each do |line|
+          .each do |line|
           (@layers << []) && next if line.chars.last == ':'
 
           dest, src, len = line.split.map(&:to_i)
