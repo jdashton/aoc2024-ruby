@@ -59,7 +59,7 @@ RSpec.describe AoC2023::Puzzles::HauntedWasteland do
     end
   end
 
-  context 'testing reduce(&:lcm)' do
+  context 'when testing reduce(&:lcm)' do
     let(:steps) { [19_667, 13_019, 21_883, 20_221, 11_911, 16_343] }
 
     it 'finds the same big number for every order of these inputs' do

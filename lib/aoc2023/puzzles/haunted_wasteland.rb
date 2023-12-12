@@ -7,7 +7,7 @@ module AoC2023
       def self.day08
         map = File.open('input/day08.txt') { |file| new file }
         puts "Day  8, Part One: #{ map.part_one_directions } steps are required to reach ZZZ."
-        # puts "Day  8, Part Two: #{ map.follow_directions } steps are required to reach ZZZ."
+        puts "Day  8, Part Two: #{ map.part_two_directions } steps are required to simultaneously reach all end-nodes."
         puts
       end
 
@@ -31,12 +31,15 @@ module AoC2023
           node  = @nodes[node][@instructions[steps % inst_len]]
           steps += 1
         end
+        # puts "Found #{ steps } steps to #{ node }."
         steps
       end
 
+      # :reek:DuplicateMethodCall { max_calls: 2 }
       def part_two_directions
-        start_nodes = @nodes.keys.select { _1.end_with?(?A) }
-        end_nodes   = @nodes.keys.select { _1.end_with?(?Z) }.to_set
+        keys        = @nodes.keys
+        start_nodes = keys.select { _1.end_with?(?A) }
+        end_nodes   = keys.select { _1.end_with?(?Z) }.to_set
         start_nodes.map { |node|
           # print "#{ node } -> any Z node: "
           follow_directions(node, end_nodes)
