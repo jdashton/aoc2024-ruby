@@ -4,11 +4,11 @@ RSpec.describe AoC2023::Puzzles::PipeMaze do
   # noinspection SpellCheckingInspection
   context 'with provided test data 1' do
     subject(:sketch) { described_class.new StringIO.new(<<~DATA) }
-      .....
-      .S-7.
-      .|.|.
-      .L-J.
-      .....
+      -L|F7
+      7S-7|
+      L|7||
+      -L-J|
+      L|-JF
     DATA
 
     it 'finds 4 as the number of steps to the farthest point' do
@@ -19,11 +19,11 @@ RSpec.describe AoC2023::Puzzles::PipeMaze do
   # noinspection SpellCheckingInspection
   context 'with additional provided test data' do
     subject(:sketch) { described_class.new StringIO.new(<<~DATA) }
-      ..F7.
-      .FJ|.
-      SJ.L7
+      7-F7-
+      .FJ|7
+      SJLL7
       |F--J
-      LJ...
+      LJ.LJ
     DATA
 
     it 'finds 8 as the number of steps to the farthest point' do
@@ -31,15 +31,15 @@ RSpec.describe AoC2023::Puzzles::PipeMaze do
     end
   end
 
-  # context 'with actual input data' do
-  #   subject(:sketch) { File.open('input/day08.txt') { |file| described_class.new file } }
-  #
-  #   it 'finds 13,019 as the number of steps from AAA to ZZZ' do
-  #     expect(sketch.part_one_directions).to eq 13_019
-  #   end
-  #
-  #   it 'finds 13,524,038,372,771 as the number of steps from all start nodes to all end nodes' do
-  #     expect(sketch.part_two_directions).to eq 13_524_038_372_771
-  #   end
-  # end
+  context 'with actual input data' do
+    subject(:sketch) { File.open('input/day10.txt') { |file| described_class.new file } }
+
+    it 'finds 6,951 as the number of steps from start to antipode' do
+      expect(sketch.find_antipode).to eq 6_951
+    end
+
+    #   it 'finds 13,524,038,372,771 as the number of steps from all start nodes to all end nodes' do
+    #     expect(sketch.part_two_directions).to eq 13_524_038_372_771
+    #   end
+  end
 end
