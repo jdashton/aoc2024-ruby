@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'pp'
-
 module AoC2023
   module Puzzles
     # For Day 11, we're finding the shortest paths (again).
@@ -18,23 +16,15 @@ module AoC2023
       end
 
       def expand_universe
-        # pp @lines
+        2.times do
+          double_empty_lines(@lines)
+          @lines = @lines.transpose
+        end
+      end
 
-        empty_lines = []
-        @lines.each_index { |i| empty_lines << i if @lines[i].all?(?.) }
-        empty_lines.reverse.each { |i| @lines.insert(i, @lines[i]) }
-
-        # pp @lines
-
-        @lines      = @lines.transpose
-        empty_lines = []
-        @lines.each_index { |i| empty_lines << i if @lines[i].all?(?.) }
-        empty_lines.reverse.each { |i| @lines.insert(i, @lines[i]) }
-
-        # PP.pp(@lines, $>, 80)
-
-        @lines = @lines.transpose
-        # PP.pp(@lines, $>, 80)
+      def double_empty_lines(lines)
+        empty_lines = lines.each_index.select { |i| lines[i].all?(?.) }
+        empty_lines.reverse.each { |i| lines.insert(i, lines[i]) }
       end
 
       def find_shortest_paths
