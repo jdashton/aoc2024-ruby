@@ -17,31 +17,27 @@ module AoC2023
 
       def construct_regex(groups) = Regexp.new "^\\.*#{ groups.map { |group| "#\{#{ group }}" }.join('\.+') }\\.*$"
 
-      def find_arrangements_for_record(record, groups)
-        puts
-        puts "Record #{ record } has #{ groups } groups."
-        regex = construct_regex(groups)
+      def count_matching_arrangements(record, groups)
+        regex         = construct_regex(groups)
+        total_qms     = record.count(??)
+        record_with_placeholders = record.gsub(??, '%c')
 
-        total_sharps   = groups.sum
-        missing_sharps = total_sharps - record.count(?#)
-        # puts "Record #{ record } has #{ total_sharps } sharps and #{ missing_sharps } missing sharps."
-        total_qms = record.count(??)
-        # puts "Record #{ record } has #{ total_qms } question marks."
-        # pp missing_chars = ([?#] * missing_sharps) + ([?.] * (total_qms - missing_sharps))
-        missing_chars = (0...total_qms)
-                          .to_a
-                          .combination(missing_sharps)
-                          .map { _1.each_with_object([?.] * total_qms) { |pos, acc| acc[pos] = ?# } }
+        (0...total_qms)
+          .to_a
+          .combination(groups.sum - record.count(?#))
+          .map { |selected_positions| substitute_positions(selected_positions, total_qms) }
+          .select { |permutation| regex.match? record_with_placeholders % permutation }
+          .count
+      end
 
-        format_string = record.gsub(??, '%c')
-
-        missing_chars.select { regex.match? format_string % _1 }.count
+      def substitute_positions(selected_positions, total_qms)
+        selected_positions.each_with_object([?.] * total_qms) { |pos, acc| acc[pos] = ?# }
       end
 
       def find_arrangements_for(line)
         record, groups = line.split
         groups         = groups.split(',').map(&:to_i)
-        find_arrangements_for_record(record, groups)
+        count_matching_arrangements(record, groups)
       end
 
       def find_arrangements
