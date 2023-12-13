@@ -7,7 +7,8 @@ module AoC2023
       def self.day11
         galaxy_map = File.open('input/day11.txt') { |file| new file }
         puts "Day  11, Part One: #{ galaxy_map.find_shortest_paths_sum } is the sum of all shortest paths."
-        # puts "Day  11, Part Two: #{ $INSTANCE_NAME.total_winnings_with_joker } are the new total winnings."
+        puts "Day  11, Part Two: #{ galaxy_map.find_shortest_paths_sum(1_000_000) } is the sum of all shortest paths " \
+               'in a greatly expanded universe.'
         puts
       end
 
@@ -16,20 +17,15 @@ module AoC2023
       end
 
       def expand_universe
-        2.times do
-          double_empty_lines(@lines)
-          @lines = @lines.transpose
-        end
+        @empty_rows    = @lines.each_index.select { |i| @lines[i].all?(?.) }
+        @lines         = @lines.transpose
+        @empty_columns = @lines.each_index.select { |i| @lines[i].all?(?.) }
+        @lines         = @lines.transpose
       end
 
-      def double_empty_lines(lines)
-        empty_lines = lines.each_index.select { |i| lines[i].all?(?.) }
-        empty_lines.reverse.each { |i| lines.insert(i, lines[i]) }
-      end
-
-      def find_shortest_paths
+      def find_shortest_paths(expansion_factor)
         galaxies_coordinates = collect_galaxy_coordinates
-        calculate_paths(galaxies_coordinates)
+        calculate_paths(galaxies_coordinates, expansion_factor)
       end
 
       def collect_galaxy_coordinates
@@ -44,10 +40,13 @@ module AoC2023
         coordinates
       end
 
-      def calculate_paths(coordinates)
+      def calculate_paths(coordinates, expansion_factor)
+        # pp @empty_columns
+        # pp @empty_rows
+        @expansion_factor = expansion_factor
         coordinates.combination(2).map do |galaxy1, galaxy2|
-          x_min, x_max, y_min, y_max = get_min_max_values(galaxy1, galaxy2)
-          calculate_distance(x_min, x_max, y_min, y_max)
+          get_min_max_values(galaxy1, galaxy2)
+            .then { |x_min, x_max, y_min, y_max| calculate_distance(x_min, x_max, y_min, y_max) }
         end
       end
 
@@ -58,12 +57,20 @@ module AoC2023
       end
 
       def calculate_distance(x_min, x_max, y_min, y_max)
-        y_max - y_min + x_max - x_min
+        [x_min, x_max, y_min, y_max]
+        x_range         = x_min..x_max
+        x_expansion_pts = @empty_columns.count { |x| x_range.include?(x) }
+
+        y_range         = y_min..y_max
+        y_expansion_pts = @empty_rows.count { |y| y_range.include?(y) }
+
+        y_max - y_min + ((@expansion_factor - 1) * y_expansion_pts) +
+          x_max - x_min + ((@expansion_factor - 1) * x_expansion_pts)
       end
 
-      def find_shortest_paths_sum
+      def find_shortest_paths_sum(expansion_factor = 2)
         expand_universe
-        find_shortest_paths.sum
+        find_shortest_paths(expansion_factor).sum
       end
     end
   end
