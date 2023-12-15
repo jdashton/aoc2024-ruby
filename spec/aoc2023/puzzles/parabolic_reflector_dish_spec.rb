@@ -17,7 +17,8 @@ RSpec.describe AoC2023::Puzzles::ParabolicReflectorDish do
     DATA
 
     it 'finds 136 as the total load on the north support beams' do
-      expect(mirror_map.find_reflections).to eq 136
+      pending('Implement this')
+      expect(mirror_map.total_load_on_beams).to eq 136
     end
   end
 
@@ -25,7 +26,8 @@ RSpec.describe AoC2023::Puzzles::ParabolicReflectorDish do
     subject(:mirror_map) { File.open('input/day14.txt') { |file| described_class.new file } }
 
     it 'finds 136 as the total load on the north support beams' do
-      expect(mirror_map.find_reflections).to eq 136
+      pending('Implement this')
+      expect(mirror_map.total_load_on_beams).to eq 136
     end
   end
 end
