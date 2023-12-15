@@ -29,7 +29,9 @@ module AoC2023
       end
 
       def find_reflections
-        @mirror_maps.map { lines_before_reflection(_1.map(&:chars).transpose.map(&:join)) || (lines_before_reflection(_1) * 100) }.sum
+        @mirror_maps
+          .map { lines_before_reflection(_1.map(&:chars).transpose.map(&:join)) || (lines_before_reflection(_1) * 100) }
+          .sum
       end
     end
   end
