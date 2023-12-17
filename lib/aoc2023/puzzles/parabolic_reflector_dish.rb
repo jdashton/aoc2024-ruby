@@ -52,34 +52,37 @@ module AoC2023
         end
       end
 
-      def cycle(count)
+      def tilt_platform
+        %i[north west south east].each { |direction| @platform = tilt(direction) }
+      end
+
+      def find_cache_target(goal, cycle_length, cycle_start)
+        mod_at_goal = goal % cycle_length
+        cycle_start.step.find { |i| i % cycle_length == mod_at_goal }
+      end
+
+      def cycle(goal)
         cache = {}
-        start = repeat = cycle_length = 0
-        (1..count).each do |i|
-          @platform = tilt(:north)
-          @platform = tilt(:west)
-          @platform = tilt(:south)
-          @platform = tilt(:east)
-          if cache[@platform]
-            # puts "Cycle #{ i } is the same as cycle #{ cache[@platform] }"
-            start        = cache[@platform]
-            repeat       = i
-            cycle_length = repeat - start
-            break
-          else
-            cache[@platform] = i
-          end
+
+        cycle_start, cycle_length = compute_cycle(cache, goal)
+        return @platform if cycle_start.zero?
+
+        cache.invert[find_cache_target(goal, cycle_length, cycle_start)]
+      end
+
+      def compute_cycle(cache, count)
+        1.upto(count) do |i|
+          tilt_platform
+          return calculate_cycle_parameters(cache[@platform], i) if cache[@platform]
+
+          cache[@platform] = i
         end
-        return @platform if start.zero?
+        [0, 0]
+      end
 
-        inv_cache = cache.invert
-        # pp [start, repeat, cycle_length]
-
-        # pp((start...repeat).find { |i| i % cycle_length == count % cycle_length })
-
-        # (start...repeat).each { |i| pp calculate_load(inv_cache[i]) }
-
-        inv_cache[(start...repeat).find { |i| i % cycle_length == count % cycle_length }]
+      def calculate_cycle_parameters(cycle_start, first_repeat)
+        cycle_length = first_repeat - cycle_start
+        [cycle_start, cycle_length]
       end
 
       def calculate_load(frame = @platform)
