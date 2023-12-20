@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'pp'
+# require 'pp'
 
 module AoC2023
   module Puzzles
@@ -16,72 +16,57 @@ module AoC2023
       end
 
       def initialize(file)
-        @decision_points = 0
-        flows, parts = file.readlines(chomp: true).slice_before(/^\s*$/).to_a
-        @workflows   = flows.to_h do |flow|
-          /(?<name>\w+)\{(?<conditions>.+)}/ =~ flow
-          [
-            name.to_sym,
-            conditions
-              .split(',')
-              .map { |clause|
-                if /(?<attribute>\w+)(?<operator>[<>]=?)(?<value>\d+):(?<result>\w+)/ =~ clause
-                  [attribute.to_sym, operator&.to_sym, value.to_i, result&.to_sym]
-                else
-                  [clause.to_sym]
-                end }
-          ]
-        end.merge({ A: [:A], R: [:R] })
+        flow_lines, part_lines = file.readlines(chomp: true).slice_before(/^\s*$/).to_a
+        @workflows             = parse_workflows(flow_lines)
+        @parts                 = parse_parts(part_lines[1..])
+      end
 
-        @parts = parts[1..].map do |part|
-          /\{(?<attributes>.+)}/ =~ part
-          attributes.split(',').map { |attribute| attribute.split('=') }.map { |k, v| [k.to_sym, v.to_i] }.to_h
+      def parse_parts(part_lines)
+        part_lines.map do |part_line|
+          /\{(?<attributes>.+)}/ =~ part_line
+          attributes.split(',').to_h { |attribute| attribute.split('=').then { |k, v| [k.to_sym, v.to_i] } }
+        end
+      end
+
+      def parse_workflows(flow_lines)
+        flow_lines.to_h { |flow_line|
+          /(?<name>\w+)\{(?<conditions>.+)}/ =~ flow_line
+          [name.to_sym, conditions.split(',').map(&method(:parse_condition))]
+        }.merge({ A: [:A], R: [:R] })
+      end
+
+      def parse_condition(clause)
+        if /(?<attribute>\w+)(?<operator>[<>])(?<value>\d+):(?<result>\w+)/ =~ clause
+          [attribute.to_sym, operator.to_sym, value.to_i, result.to_sym]
+        else
+          [clause.to_sym]
         end
       end
 
       def evaluate_part(part, rule = :in)
         @workflows[rule].each do |attribute, operator, value, result|
-          if operator.nil?
-            case attribute
-              when :A then return part.values.sum
-              when :R then return 0
-              else
-                return evaluate_part(part, attribute) # if @workflows[result].present?
-            end
-          end
-
-          # puts "Rule #{ rule }, attribute: #{ attribute }, operator: #{ operator }, value: #{ value }, result: #{ result }"
+          # noinspection RubyCaseWithoutElseBlockInspection
           case operator
-            when :<
-              return evaluate_part(part, result) if part[attribute] < value
-            when :>
-              return evaluate_part(part, result) if part[attribute] > value
-            else
-              raise "Unexpected operator #{ operator }"
+            when nil then return nil_int_workflow(attribute, part)
+
+            when :<, :>
+              return evaluate_part(part, result) if part[attribute].send(operator, value)
           end
         end
       end
 
-      def split_fragment_less_than(fragment, attribute, value)
-        # puts "Splitting fragment #{ fragment } on attribute #{ attribute } with value #{ value }"
-        # Possible cases:
-        #     (10..100) < 200 ->  [(10..100), nil]
-        #     (10..100) < 5   ->  [nil, (10..100)]
-        #     (10..100) < 10  ->  [nil, (10..100)]
-        #     (10..100) < 100 ->  [(10..99), (100..100)]
-        #     (10..100) < 50  ->  [(10..49), (50..100)]
-        return [nil, fragment] if fragment[attribute].end < value
-        return [fragment, nil] if fragment[attribute].begin >= value
-
-        new_frag_left            = fragment.dup
-        new_frag_left[attribute] = (fragment[attribute].begin..(value - 1))
-
-        new_frag_right            = fragment.dup
-        new_frag_right[attribute] = (value..fragment[attribute].end)
-        [new_frag_left, new_frag_right]
+      def nil_int_workflow(attribute, part)
+        case attribute
+          when :A then part.values.sum
+          when :R then 0
+          else
+            evaluate_part(part, attribute)
+        end
       end
 
-      def split_fragment_greater_than(fragment, attribute, value)
+      def split_fragment(fragment, attribute, value, operator = :>)
+        value += 1 if operator == :>
+
         # puts "Splitting fragment #{ fragment } on attribute #{ attribute } with value #{ value }"
         # Possible cases:
         #     (10..100) > 200 ->  [nil, (10..100)]
@@ -89,50 +74,45 @@ module AoC2023
         #     (10..100) > 5   ->  [(10..100), nil]
         #     (10..100) > 10  ->  [(11..100), (10..10)]
         #     (10..100) > 50  ->  [(51..100), (10..50)]
-        return [nil, fragment] if fragment[attribute].end <= value
-        return [fragment, nil] if fragment[attribute].begin > value
+        return [nil, fragment] if fragment[attribute].end < value
+        return [fragment, nil] if fragment[attribute].begin >= value
 
-        new_frag_left            = fragment.dup
-        new_frag_left[attribute] = ((value + 1)..fragment[attribute].end)
+        new_frag_matching  = fragment.dup
+        new_frag_differing = fragment.dup
 
-        new_frag_right            = fragment.dup
-        new_frag_right[attribute] = (fragment[attribute].begin..value)
-        [new_frag_left, new_frag_right]
+        new_frag_matching[attribute], new_frag_differing[attribute] = partition_range(fragment, attribute, value, operator)
+
+        [new_frag_matching, new_frag_differing]
+      end
+
+      def partition_range(fragment, attribute, value, operator = :<)
+        [fragment[attribute].begin..(value - 1), value..fragment[attribute].end]
+          .then { |partitions| operator == :< ? partitions : partitions.reverse }
       end
 
       def follow_rules(rule, space_fragment)
         @workflows[rule].map { |attribute, operator, value, result|
-          # puts "Rule #{ rule }, attribute: #{ attribute }, operator: #{ operator }, value: #{ value }, result: #{ result }"
-          @decision_points += 1
+          # noinspection RubyCaseWithoutElseBlockInspection
           case operator
-            when nil
-              # puts " -- operator is nil, attribute is #{ attribute }, space_fragment is #{ space_fragment }"
-              case attribute
-                when :A
-                  # puts " -- -- Accepted ranges are #{ space_fragment }"
-                  # puts "       contributes #{ space_fragment.values.map(&:count).reduce(:*) }"
-                  space_fragment.values.map(&:count).reduce(:*)
-                when :R
-                  # puts " -- -- Rejected ranges are #{ space_fragment }"
-                  0
-                else
-                  # puts " -- -- Following rules at #{ attribute }"
-                  follow_rules(attribute, space_fragment) # if @workflows[result]
-              end
-            when :<
+            when nil then nil_range_workflow(attribute, space_fragment)
+            when :<, :>
               # Do two things:
               # 1. Modify the part that we're holding so that it contains the partial range that did not meet this rule
               #    and create a copy with the partial range that /does/ meet this rule.
               # 2. Send the copy into this rule.
-              new_fragment, space_fragment = split_fragment_less_than(space_fragment, attribute, value)
+              new_fragment, space_fragment = split_fragment(space_fragment, attribute, value, operator)
               new_fragment.nil? ? 0 : follow_rules(result, new_fragment)
-            when :>
-              new_fragment, space_fragment = split_fragment_greater_than(space_fragment, attribute, value)
-              new_fragment.nil? ? 0 : follow_rules(result, new_fragment)
-            else
-              raise "Unexpected operator #{ operator }"
           end
         }.sum
+      end
+
+      def nil_range_workflow(attribute, space_fragment)
+        case attribute
+          when :A then space_fragment.values.map(&:count).reduce(:*)
+          when :R then 0
+          else
+            follow_rules(attribute, space_fragment)
+        end
       end
 
       def evaluate_parts
@@ -152,9 +132,8 @@ module AoC2023
       def find_combinations
         # PP.pp @workflows, $stdout, 80
         # 167409079868000
-        range_total = follow_rules(:in, FULL_RANGE)
-        puts "Decision points: #{ @decision_points }"
-        range_total
+
+        follow_rules(:in, FULL_RANGE)
       end
     end
   end
