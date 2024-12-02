@@ -58,7 +58,7 @@ RSpec/FilePath:
 
 RSpec/SpecFilePathFormat:
   CustomTransform:
-    AoC2023: aoc2023
+    AoC2024: aoc2024
 
 Style/BlockDelimiters:
   EnforcedStyle: braces_for_chaining

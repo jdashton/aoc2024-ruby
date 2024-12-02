@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'aoc2023'
+require 'aoc2024'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure
@@ -13,5 +13,5 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
 
-  config.include AoC2023
+  config.include AoC2024
 end

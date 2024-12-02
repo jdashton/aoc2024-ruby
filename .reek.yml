@@ -12,7 +12,7 @@ detectors:
 
   UncommunicativeModuleName:
     exclude:
-      - AoC2023
+      - AoC2024
 
   UncommunicativeMethodName:
     exclude:
@@ -44,4 +44,4 @@ detectors:
       - stacks2
 
 #exclude_paths:
-#  - lib/aoc2023/puzzles/arithmetic_logic_unit.rb
+#  - lib/aoc2024/puzzles/arithmetic_logic_unit.rb

@@ -2,7 +2,7 @@
 
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in aoc2023.gemspec
+# Specify your gem's dependencies in aoc2024.gemspec
 gemspec
 
 gem 'rake', '~> 13.0'

@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'aoc2023'
+require 'aoc2024'
 
-AoC2023.start
+AoC2024.start
