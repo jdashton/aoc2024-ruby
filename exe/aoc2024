@@ -1,6 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+# Because of Bundler's reliance on Git, this file won't work until it is committed.
+
 require 'aoc2024'
 
 AoC2024.start
