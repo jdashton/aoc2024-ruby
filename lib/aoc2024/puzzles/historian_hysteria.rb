@@ -26,7 +26,7 @@ module AoC2024
       end
 
       def similarity_score
-        frequencies = @lists.last.group_by(&:itself).transform_values(&:size)
+        frequencies = @lists.last.tally
         @lists.first.reduce(0) { |sum, i| sum + (i * (frequencies[i] || 0)) }
       end
     end
