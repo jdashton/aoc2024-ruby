@@ -42,6 +42,7 @@ Naming/BlockForwarding:
 Naming/MethodParameterName:
   AllowedNames:
     - i
+    - n
     - w
     - x
     - y
@@ -64,6 +65,9 @@ Style/BlockDelimiters:
   EnforcedStyle: braces_for_chaining
 
 Style/CharacterLiteral:
+  Enabled: false
+
+Style/EmptyCaseCondition:
   Enabled: false
 
 Style/FormatString:
